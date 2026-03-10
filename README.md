@@ -20,6 +20,10 @@ Browser (React UI)
 3. Poke processes the message and calls the `store_reply` MCP tool exposed on `:3000`.
 4. The frontend polls `/replies` every 3 seconds and renders new assistant messages.
 
+## Screenshot
+
+![Poke Study Chatbot UI](./screenshot.png)
+
 ## Quick Start
 
 ### 1. Install dependencies
@@ -63,6 +67,8 @@ npm run dev
 
 Open `http://localhost:5173`, click **Settings**, paste your Poke API key and the `loca.lt` relay URL.
 
+> **Note:** Add a screenshot named `screenshot.png` to the repo root for the README preview.
+
 ## Configuration
 
 | Variable | Default | Description |
@@ -85,7 +91,6 @@ poke chatbot/
 │   ├── main.jsx          # React root — renders PokeStudy
 │   └── reset.css         # Minimal CSS reset
 ├── poke-study.jsx        # Main multi-session study chatbot UI
-├── poke-chat.jsx         # Simpler single-chat variant (experimental)
 └── poke-relay/
     ├── package.json      # Relay dependencies
     ├── tsconfig.json      # TypeScript configuration
