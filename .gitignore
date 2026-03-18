@@ -3,5 +3,3 @@ dist/
 *.tar.gz
 *.tgz
 .DS_Store
-package-lock.json
-poke-relay/package-lock.json

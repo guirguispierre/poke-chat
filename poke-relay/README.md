@@ -5,6 +5,11 @@
 - An MCP server on port `3000` at `/mcp` using `@modelcontextprotocol/sdk` and `StreamableHTTPServerTransport`
 - An Express relay on port `4242` for browser-safe polling and message proxying
 
+## Requirements
+
+- Node.js `20+`
+- npm
+
 ## Endpoints
 
 ### MCP server
@@ -69,16 +74,18 @@ Terminal 3:
 npx localtunnel --port 4242
 ```
 
-Paste the `https://*.loca.lt` URL into the artifact Settings as the Relay URL.
+Paste the relay URL into the frontend Settings modal.
 
-## Artifact
+## Frontend Integration
 
-Use [`poke-study.jsx`](../poke-study.jsx) as the React artifact. It:
+Use [`poke-study.jsx`](../poke-study.jsx) as the React frontend. It:
 
 - posts outbound messages to `/send`
 - polls `/replies` every 3 seconds
 - renders LaTeX with KaTeX from a CDN
 - prepends `session_name` and `session_id` to every outbound message
+
+If the browser can reach the relay directly, use `http://localhost:4242` instead of tunneling the relay.
 
 ## Package As Tarball
 

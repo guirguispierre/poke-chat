@@ -2,6 +2,11 @@
 
 Thanks for your interest in contributing! Here's how to get started.
 
+## Requirements
+
+- Node.js `20+`
+- npm
+
 ## Getting Started
 
 1. **Fork** the repository and clone your fork.
@@ -17,8 +22,9 @@ Thanks for your interest in contributing! Here's how to get started.
 npm install
 cd poke-relay && npm install && cd ..
 
-# Start the relay (builds + runs)
-cd poke-relay && npm run build && node dist/index.js
+# Build and run the relay
+npm run relay:build
+npm run relay:start
 
 # Start the frontend dev server (separate terminal)
 npm run dev
@@ -38,6 +44,11 @@ When opening an issue, please include:
 - Expected vs. actual behavior
 - Browser and Node.js version
 - Relevant console output or screenshots
+
+## Notes
+
+- The browser stores the Poke API key and relay URL in `localStorage`.
+- The relay reply store is in-memory, so restarting `poke-relay` clears queued replies.
 
 ## License
 

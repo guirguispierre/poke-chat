@@ -1,61 +1,62 @@
 # Poke Study Chatbot
 
-A self-hosted relay and React UI that turns [Poke](https://poke.com) into a multi-session study chatbot with LaTeX rendering, image attachments, and real-time reply polling.
+Open-source React UI plus a local relay/MCP bridge that turns [Poke](https://poke.com) into a multi-session study chatbot with LaTeX rendering, image attachments, and reply polling.
+
+## Requirements
+
+- Node.js `20+`
+- A Poke API key
+- `npx poke` for tunneling the MCP endpoint
+- Optional: `localtunnel` if the browser cannot reach your relay directly
 
 ## Architecture
 
-```
+```text
 Browser (React UI)
   │
   ├─ POST /send ──► Relay (Express :4242) ──► Poke webhook
   │                                              │
-  │                                     Poke processes message,
-  │                                     calls MCP tool store_reply
+  │                                     Poke processes message
+  │                                     and calls store_reply
   │                                              │
   └─ GET /replies ◄── Relay ◄── MCP Server (:3000) ◄─┘
 ```
 
-1. The **React frontend** (`poke-study.jsx`) sends user messages to the relay's `/send` endpoint.
-2. The **relay server** (`poke-relay/`) proxies the message to the Poke inbound-SMS webhook with your API key.
-3. Poke processes the message and calls the `store_reply` MCP tool exposed on `:3000`.
-4. The frontend polls `/replies` every 3 seconds and renders new assistant messages.
-
-## Screenshot
-
-![Poke Study Chatbot UI](./screenshot.png)
+1. The React frontend in [`poke-study.jsx`](./poke-study.jsx) sends outbound messages to the relay.
+2. The relay in [`poke-relay/`](./poke-relay) forwards them to the Poke inbound webhook.
+3. Poke calls the MCP `store_reply` tool exposed by the relay package.
+4. The frontend polls `/replies` and renders new assistant messages per study session.
 
 ## Quick Start
 
 ### 1. Install dependencies
 
 ```bash
-# Frontend
 npm install
-
-# Relay
-cd poke-relay
-npm install
+cd poke-relay && npm install
 ```
 
-### 2. Build & start the relay
+### 2. Start the relay and MCP server
 
 ```bash
-cd poke-relay
-npm run build
-node dist/index.js
+npm run relay:build
+npm run relay:start
 ```
 
-The MCP server starts on `:3000` and the relay on `:4242`.
+This starts:
 
-### 3. Expose the servers
+- MCP server on `http://localhost:3000/mcp`
+- Relay server on `http://localhost:4242`
 
-In separate terminals:
+### 3. Expose the MCP endpoint to Poke
 
 ```bash
-# Expose the MCP endpoint so Poke can reach it
 npx poke tunnel -n "Poke Chatbot" http://localhost:3000/mcp
+```
 
-# Expose the relay so the browser can reach it (if not on localhost)
+If your browser is not on the same machine as the relay, expose port `4242` too:
+
+```bash
 npx localtunnel --port 4242
 ```
 
@@ -65,49 +66,52 @@ npx localtunnel --port 4242
 npm run dev
 ```
 
-Open `http://localhost:5173`, click **Settings**, paste your Poke API key and the `loca.lt` relay URL.
+Open `http://localhost:5173`, click `Settings`, and enter:
 
-> **Note:** Add a screenshot named `screenshot.png` to the repo root for the README preview.
+- your Poke API key
+- the relay URL
+  - use `http://localhost:4242` if the browser can reach the relay directly
+  - use your `https://*.loca.lt` URL if you tunneled the relay
 
 ## Configuration
 
 | Variable | Default | Description |
-|---|---|---|
+| --- | --- | --- |
 | `MCP_PORT` | `3000` | Port for the MCP server |
 | `RELAY_PORT` | `4242` | Port for the Express relay |
 
-Set these as environment variables before starting the relay, or use the defaults.
-
-The **Poke API key** and **Relay URL** are configured in the browser UI (Settings modal) and persisted in `localStorage`.
-
-## Project Structure
-
-```
-poke chatbot/
-├── index.html            # Vite entry point
-├── vite.config.js        # Vite configuration
-├── package.json          # Frontend dependencies
-├── src/
-│   ├── main.jsx          # React root — renders PokeStudy
-│   └── reset.css         # Minimal CSS reset
-├── poke-study.jsx        # Main multi-session study chatbot UI
-└── poke-relay/
-    ├── package.json      # Relay dependencies
-    ├── tsconfig.json      # TypeScript configuration
-    ├── README.md         # Relay-specific documentation
-    └── src/
-        └── index.ts      # MCP server + Express relay
-```
+The Poke API key and relay URL are configured in the browser UI and stored in `localStorage` on that browser only.
 
 ## Features
 
-- **Multi-session chat** — Create named study sessions (e.g. "Diff EQ", "ENGR 205") with independent message histories.
-- **LaTeX rendering** — Inline and display math via KaTeX (`$...$`, `$$...$$`, `\(...\)`, `\[...\]`).
-- **Image attachments** — Paste or upload images; they're resized client-side and sent as data URLs.
-- **Real-time polling** — The UI polls the relay for new replies every 3 seconds with a typing indicator.
-- **Relay health indicator** — Visual status dot shows whether the relay is reachable.
-- **Dark mode UI** — Polished dark theme with IBM Plex Sans typography.
+- Multi-session chat with isolated message histories
+- KaTeX rendering for inline and block math
+- Image paste/upload with client-side resizing
+- Relay health indicator and reply polling
+- Local relay that keeps the browser off the Poke webhook directly
+
+## Project Structure
+
+```text
+.
+├── index.html
+├── package.json
+├── poke-study.jsx
+├── src/
+│   ├── main.jsx
+│   └── reset.css
+├── vite.config.js
+└── poke-relay/
+    ├── package.json
+    ├── README.md
+    ├── src/index.ts
+    └── tsconfig.json
+```
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## License
 
-[MIT](LICENSE)
+[MIT](./LICENSE)

@@ -11,7 +11,11 @@ const RELAY_TUNNEL_HEADERS = {
 };
 
 function createId() {
-  return Math.random().toString(36).slice(2, 10);
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+
+  return `id_${Math.random().toString(36).slice(2, 10)}`;
 }
 
 function formatTime(timestamp) {
@@ -496,6 +500,12 @@ export default function PokeStudy() {
       }),
     );
   }, [apiKey, normalizedRelayUrl]);
+
+  useEffect(() => () => {
+    if (statusTimeoutRef.current) {
+      window.clearTimeout(statusTimeoutRef.current);
+    }
+  }, []);
 
   useEffect(() => {
     sessions.forEach((session) => {

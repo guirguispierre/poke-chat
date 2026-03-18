@@ -1,12 +1,33 @@
 {
-  "name": "poke-study-local-app",
-  "private": true,
+  "name": "poke-study-chatbot",
   "version": "1.0.0",
+  "description": "Open-source React UI for a multi-session Poke study chatbot",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "relay:build": "npm --prefix poke-relay run build",
+    "relay:start": "npm --prefix poke-relay run serve",
+    "relay:dev": "npm --prefix poke-relay run start"
+  },
+  "keywords": [
+    "poke",
+    "chatbot",
+    "react",
+    "study"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guirguispierre/poke-chat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/guirguispierre/poke-chat/issues"
+  },
+  "homepage": "https://github.com/guirguispierre/poke-chat#readme",
+  "engines": {
+    "node": ">=20"
   },
   "dependencies": {
     "katex": "^0.16.11",

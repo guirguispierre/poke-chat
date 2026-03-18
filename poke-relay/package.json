@@ -3,6 +3,19 @@
   "version": "1.0.0",
   "description": "Local MCP + relay bridge for a Poke.com study chatbot",
   "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guirguispierre/poke-chat.git",
+    "directory": "poke-relay"
+  },
+  "bugs": {
+    "url": "https://github.com/guirguispierre/poke-chat/issues"
+  },
+  "homepage": "https://github.com/guirguispierre/poke-chat/tree/main/poke-relay",
+  "engines": {
+    "node": ">=20"
+  },
   "files": [
     "dist",
     "src",
